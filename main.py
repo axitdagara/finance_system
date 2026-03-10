@@ -192,7 +192,6 @@ def apply_monthly_updates(user):
     else:
         print("All monthly updates applied successfully!")
     
-    # Show updated balances
     print("\nUpdated Account Balances:")
     for summary in user.get_all_summaries():
         account = user.get_account(summary.account_id)

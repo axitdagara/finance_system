@@ -6,3 +6,9 @@
 30000,credit,Initial deposit,initial
 50000,credit,Initial deposit,initial
 30000,credit,Initial deposit,initial
+50000,credit,Initial deposit,initial
+30000,credit,Initial deposit,initial
+1000.0,credit,Deposit,deposit
+191.25,credit,Monthly interest,interest
+200,debit,Monthly fee,fee
+5000,debit,EMI payment,emi
