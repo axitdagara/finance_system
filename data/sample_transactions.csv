@@ -12,3 +12,24 @@
 191.25,credit,Monthly interest,interest
 200,debit,Monthly fee,fee
 5000,debit,EMI payment,emi
+50000,credit,Initial deposit,initial
+30000,credit,Initial deposit,initial
+31000.0,debit,Withdrawal,withdrawal
+50000,credit,Initial deposit,initial
+30000,credit,Initial deposit,initial
+31000.0,debit,Withdrawal,withdrawal
+50000,credit,Initial deposit,initial
+30000,credit,Initial deposit,initial
+35000.0,credit,Deposit,deposit
+50000,credit,Initial deposit,initial
+30000,credit,Initial deposit,initial
+2000.0,debit,Withdrawal,withdrawal
+2000.0,debit,Withdrawal,withdrawal
+50000,credit,Initial deposit,initial
+30000,credit,Initial deposit,initial
+40000.0,credit,Initial deposit,initial
+187.5,credit,Monthly interest,interest
+200,debit,Monthly fee,fee
+5000,debit,EMI payment,emi
+150.0,credit,Monthly interest,interest
+31000.0,debit,Withdrawal,withdrawal

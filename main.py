@@ -221,7 +221,7 @@ def view_financial_report(user):
    
     print("Top 5 Transactions by Amount:\n")
     
-    for i, txn in enumerate(report['top_5_transactions'], 1):
+    for i, txn in enumerate(report['top_5_transactions'],0 ):
         print(f"  {i}. {txn['description']}: {format_currency(txn['amount'])} ({txn['type']})")
         
         
