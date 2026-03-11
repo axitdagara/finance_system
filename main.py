@@ -380,7 +380,10 @@ def main():
             elif choice == '10':
                  
                 print("Thank you ")
-                clear_screen()
+                ## want to clear screen after 5s and exit
+                
+
+               ## clear_screen()                
                
                 break
             else:

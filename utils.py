@@ -7,7 +7,7 @@ def load_transactions_from_file(filepath: str) -> list:
 
     try:
         with open(filepath, "r") as file:
-            reader = csv.reader(file)
+            reader = csv.reader(file) # CHAT GPT
 
             for row in reader:
                 try:
@@ -29,6 +29,7 @@ def load_transactions_from_file(filepath: str) -> list:
 
 def filter_transactions(transactions, **kwargs):
     result = transactions
+    
 
     if 'type' in kwargs:
         result = [t for t in result if t.type == kwargs['type']]
@@ -47,6 +48,8 @@ def filter_transactions(transactions, **kwargs):
 
     return result
 
+# filtered = filter_transactions(transactions, type='debit', min_amount=1000, tag='withdrawal')
+
 
 def generate_report(user):
     report = {
@@ -63,7 +66,7 @@ def generate_report(user):
 
     all_transactions = []
 
-    for summary in user.get_all_summaries():
+    for summary in user.get_all_summaries():    ## chat gpt
         account = user.get_account(summary.account_id)
         all_transactions.extend(account.history)
 

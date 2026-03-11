@@ -12,6 +12,7 @@ class SavingsAccount(Account):
         interest_amount = self.balance * self.interest_rate / 12 / 100
         self._Account__balance += interest_amount
         transaction = Transaction.create(interest_amount, 'credit', 'Monthly interest', tags=['interest'])
+        print(repr(transaction))
         self.history.append(transaction)
 
     def withdraw(self, amount):
