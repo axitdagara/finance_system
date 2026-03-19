@@ -94,11 +94,18 @@ def view_all_accounts(user):
         print(f"Type: {summary.account_type}")
         print(f"Balance: {format_currency(summary.balance)}")
         print(f"Transactions: {summary.total_transactions}")
-        if summary.account_type == 'Loan' and hasattr(account, 'loan_summary'):
+        if summary.account_type == 'Loan' and hasattr(account, 'loan_summary'):   # chat gpt
             loan_info = account.loan_summary()
             print(f"Principal: {format_currency(loan_info['principal'])}")
             print(f"EMI: {format_currency(loan_info['emi'])}")
             print(f"Months Remaining: {loan_info['months_remaining']}")
+            if loan_info.get('repayment_account_id'):
+                source_id = loan_info['repayment_account_id']
+                try:
+                    source_account = user.get_account(source_id)
+                    print(f"EMI Source Account: {source_id} ({source_account.get_account_type()})")
+                except FinanceException:
+                    print(f"EMI Source Account: {source_id} (not found)")
         print()
 
 
@@ -171,6 +178,7 @@ def view_statement(user):
         
         for txn in transactions:
             print(f"  {txn}\n")
+            print(f'  {repr(txn)}\n')
         
         print(f"Total Transactions: {len(transactions)}")
     except ValueError:
@@ -221,7 +229,7 @@ def view_financial_report(user):
    
     print("Top 5 Transactions by Amount:\n")
     
-    for i, txn in enumerate(report['top_5_transactions'],0 ):
+    for i, txn in enumerate(report['top_5_transactions'],0 ):   ## chat gpt
         print(f"  {i}. {txn['description']}: {format_currency(txn['amount'])} ({txn['type']})")
         
         
@@ -254,7 +262,42 @@ def create_account(user):
             emi = float(input("Enter EMI amount: "))
             months = int(input("Enter remaining months: "))
 
-            account = LoanAccount(account_id, user.name, principal=principal, emi_amount=emi, remaining_months=months)
+            eligible_accounts = [
+                summary for summary in user.get_all_summaries()
+                if summary.account_type in ('Savings', 'Current')
+            ]
+
+            if not eligible_accounts:
+                print("Create a Savings or Current account first to link EMI deduction.")
+                return
+
+            print("\nSelect account for monthly EMI deduction")
+            for index, summary in enumerate(eligible_accounts, 1):
+                print(
+                    f"{index}. {summary.account_id} ({summary.account_type}) "
+                    f"- Balance: {format_currency(summary.balance)}"
+                )
+
+            source_choice = input("Enter option number: ").strip()
+            if not source_choice.isdigit():
+                print("Invalid selection.")
+                return
+
+            source_index = int(source_choice)
+            if source_index < 1 or source_index > len(eligible_accounts):
+                print("Invalid selection.")
+                return
+
+            repayment_account_id = eligible_accounts[source_index - 1].account_id
+
+            account = LoanAccount(
+                account_id,
+                user.name,
+                principal=principal,
+                emi_amount=emi,
+                remaining_months=months,
+                repayment_account_id=repayment_account_id
+            )
 
         else:
             print("Invalid account type.")
@@ -265,6 +308,8 @@ def create_account(user):
         print("\nAccount created successfully!")
         print(f"Account ID: {account_id}")
         print(f"Type: {account.get_account_type()}")
+        if account.get_account_type() == 'Loan' and getattr(account, 'repayment_account_id', None):
+            print(f"Linked EMI Source: {account.repayment_account_id}")
 
     except Exception as e:
         print(f"Error: {e}")
@@ -332,7 +377,14 @@ def main():
    
     savings = SavingsAccount("SAV001", "Axit Dagara", 50000, interest_rate=4.5)
     current = CurrentAccount("CUR001", "Axit Dagara", 30000, monthly_fee=200, overdraft_limit=5000)
-    loan = LoanAccount("LOAN001", "Axit Dagara", principal=100000, emi_amount=5000, remaining_months=20)
+    loan = LoanAccount(
+        "LOAN001",
+        "Axit Dagara",
+        principal=100000,
+        emi_amount=5000,
+        remaining_months=20,
+        repayment_account_id="CUR001"
+    )
     
     user.add_account(savings)
     user.add_account(current)

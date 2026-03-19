@@ -44,6 +44,18 @@ class User:
         errors = []
         for account in self.__accounts.values():
             try:
+                if (
+                    account.get_account_type() == 'Loan'
+                    and account.remaining_months > 0
+                    and getattr(account, 'repayment_account_id', None)
+                ):
+                    source_account = self.get_account(account.repayment_account_id)
+                    if source_account.get_account_type() not in ('Savings', 'Current'):
+                        raise ValueError(
+                            f"EMI source account {account.repayment_account_id} must be a Savings or Current account"
+                        )
+                    source_account.withdraw(account.emi_amount)
+
                 account.apply_monthly_update()
             except Exception as e:
                 errors.append(e)
