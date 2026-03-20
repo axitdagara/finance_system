@@ -275,7 +275,7 @@ def create_account(user):
             for index, summary in enumerate(eligible_accounts, 1):
                 print(
                     f"{index}. {summary.account_id} ({summary.account_type}) "
-                    f"- Balance: {format_currency(summary.balance)}"
+                    f"- Balance: {format_currency(summary.balance)}"   ## chat gpt
                 )
 
             source_choice = input("Enter option number: ").strip()
